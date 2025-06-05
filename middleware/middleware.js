@@ -9,8 +9,10 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({error: 'Unauthorized: No token provided'});
         }
 
+        // Extract token from Bearer string
         const token = authHeader.split(' ')[1];
 
+        // Verify token and get user
         const decoded = verifyToken(token);
         const user = await User.findById(decoded.userId);
 
@@ -18,6 +20,7 @@ const authMiddleware = async (req, res, next) => {
             return res.status(401).json({ error: 'Unauthorized: User not found' });
         }
 
+        // Add user to request object
         req.user = user;
         next()
     } catch (e) {
